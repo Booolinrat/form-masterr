@@ -1,11 +1,15 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
+const cors = require('cors'); // Import cors
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 const fs = require('fs');
 const path = require('path');
+
+// Enable CORS for all origins
+app.use(cors());  // Allow all origins by default
 
 // Load the blacklist file into an array
 const blacklist = fs.readFileSync(path.join(__dirname, 'blacklist.txt'), 'utf8')
@@ -71,15 +75,15 @@ io.on('connection', (socket) => {
             return;
         }
 
-    // Filter inappropriate words
-    const isBlacklisted = blacklist.some(word => 
-        question.toLowerCase().includes(word)
-    );
+        // Filter inappropriate words
+        const isBlacklisted = blacklist.some(word => 
+            question.toLowerCase().includes(word)
+        );
 
-    if (isBlacklisted) {
-        console.log(`Blocked inappropriate question: ${question}`);
-        return; // Do not broadcast or store the question
-    }
+        if (isBlacklisted) {
+            console.log(`Blocked inappropriate question: ${question}`);
+            return; // Do not broadcast or store the question
+        }
 
         // Generate a unique ID for each question
         const questionId = `question-${Date.now()}`;
