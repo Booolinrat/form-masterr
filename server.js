@@ -27,7 +27,7 @@ app.post('/generate-code', (req, res) => {
     const code = generateSessionCode(); // Implement your code generation logic
     sessions[code] = {
         teacher: null,   // Teacher will join later
-        students: [],    // Array to store students for this session
+        students: [],    // Array to store students for this sessio
         questions: []    // Array to store questions for this session
     };
     res.json({ code });
@@ -132,3 +132,5 @@ io.on('connection', (socket) => {
 server.listen(3000, () => {
     console.log('Server running on http://localhost:3000');
 });
+
+
